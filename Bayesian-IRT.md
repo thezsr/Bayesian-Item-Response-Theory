@@ -89,9 +89,13 @@ model {
 }
 ```
 
+Posterior Sampling
+
 ``` r
 mod <- rstan::sampling(IRT_1PL, chains = 3, data = list(N = nrow(LSAT), N_I = ncol(LSAT), Y = LSAT))
 ```
+
+Posterior Estimates
 
 ``` r
 print(mod, pars = c("disc", "diff"))
@@ -102,14 +106,57 @@ print(mod, pars = c("disc", "diff"))
     ## post-warmup draws per chain=1000, total post-warmup draws=3000.
     ## 
     ##          mean se_mean   sd  2.5%   25%   50%   75% 97.5% n_eff Rhat
-    ## disc     0.72    0.00 0.07  0.58  0.67  0.72  0.77  0.86   363    1
-    ## diff[1] -3.81    0.02 0.39 -4.69 -4.04 -3.77 -3.53 -3.16   381    1
-    ## diff[2] -1.39    0.01 0.16 -1.76 -1.49 -1.38 -1.28 -1.11   476    1
-    ## diff[3] -0.34    0.00 0.11 -0.55 -0.41 -0.33 -0.27 -0.13  1969    1
-    ## diff[4] -1.82    0.01 0.19 -2.24 -1.93 -1.80 -1.68 -1.49   428    1
-    ## diff[5] -2.92    0.01 0.30 -3.59 -3.09 -2.89 -2.72 -2.42   415    1
+    ## disc     0.72    0.00 0.07  0.58  0.68  0.73  0.77  0.86   521    1
+    ## diff[1] -3.78    0.02 0.37 -4.62 -4.00 -3.74 -3.52 -3.16   560    1
+    ## diff[2] -1.38    0.01 0.16 -1.72 -1.48 -1.37 -1.27 -1.10   696    1
+    ## diff[3] -0.33    0.00 0.10 -0.53 -0.40 -0.33 -0.26 -0.14  2404    1
+    ## diff[4] -1.81    0.01 0.19 -2.22 -1.92 -1.79 -1.67 -1.48   666    1
+    ## diff[5] -2.90    0.01 0.29 -3.55 -3.07 -2.86 -2.71 -2.42   571    1
     ## 
-    ## Samples were drawn using NUTS(diag_e) at Thu Apr 30 00:47:19 2020.
+    ## Samples were drawn using NUTS(diag_e) at Thu Apr 30 01:42:28 2020.
     ## For each parameter, n_eff is a crude measure of effective sample size,
     ## and Rhat is the potential scale reduction factor on split chains (at 
     ## convergence, Rhat=1).
+
+Using the `ltm` package to obtain maximum likelihood estimates
+
+``` r
+library(ltm)
+```
+
+    ## Loading required package: MASS
+
+    ## Loading required package: msm
+
+    ## Loading required package: polycor
+
+``` r
+model_rasch <- rasch(data = LSAT, IRT.param = TRUE)
+summary(model_rasch)
+```
+
+    ## 
+    ## Call:
+    ## rasch(data = LSAT, IRT.param = TRUE)
+    ## 
+    ## Model Summary:
+    ##    log.Lik      AIC      BIC
+    ##  -2466.938 4945.875 4975.322
+    ## 
+    ## Coefficients:
+    ##                 value std.err   z.vals
+    ## Dffclt.Item 1 -3.6153  0.3266 -11.0680
+    ## Dffclt.Item 2 -1.3224  0.1422  -9.3009
+    ## Dffclt.Item 3 -0.3176  0.0977  -3.2518
+    ## Dffclt.Item 4 -1.7301  0.1691 -10.2290
+    ## Dffclt.Item 5 -2.7802  0.2510 -11.0743
+    ## Dscrmn         0.7551  0.0694  10.8757
+    ## 
+    ## Integration:
+    ## method: Gauss-Hermite
+    ## quadrature points: 21 
+    ## 
+    ## Optimization:
+    ## Convergence: 0 
+    ## max(|grad|): 2.9e-05 
+    ## quasi-Newton: BFGS

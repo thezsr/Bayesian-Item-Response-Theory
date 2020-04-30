@@ -32,7 +32,7 @@ rstan_options(auto_write = TRUE)
 ```
 Using `rstan` to run the Stan code.
 
-```{stan, output.var = "IRT_1PL", eval = FALSE }
+```{stan, output.var = "IRT_1PL"}
 data {
   int N_I; //number of items
   int N; //number of examinees
@@ -70,8 +70,8 @@ model {
 
 
 ```{r, results='hide', message=FALSE}
-data <- list(N = nrow(LSAT), N_I = ncol(LSAT), Y = LSAT)
-mod <- rstan::stan("IRT_1PL.stan", chains = 3, data = data)
+
+mod <- rstan::sampling(IRT_1PL, chains = 3, data = list(N = nrow(LSAT), N_I = ncol(LSAT), Y = LSAT))
 ```
 ```{r}
 print(mod, pars = c("disc", "diff"))

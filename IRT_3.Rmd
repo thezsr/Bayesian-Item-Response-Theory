@@ -1,0 +1,113 @@
+---
+title: "3PL"
+author: "Reginald Ziedzor"
+date: "5/2/2020"
+output: github_document
+---
+
+# Three Parameter Logistic Model
+
+In this example, we will still be using the `LSAT` dataset from the `ltm` package.
+
+```{r}
+library(rstan)
+library(ltm)
+head(LSAT)
+```
+
+The code for the 3PL in Stan
+```{stan, output.var = "IRT_3PL", cache = TRUE}
+data {
+  int N_I; //number of items
+  int N; //number of examinees
+  int<lower = 0, upper = 1> Y[N, N_I]; //observed data
+}
+
+parameters {
+  vector[N] theta; //ability levels of examinees
+  vector[N_I] diff; //item difficulty
+  vector<lower = 0>[N_I] disc; //ensuring item discrimination parameter is nonnegative
+  real<lower = 0> sigma_disc;
+  vector<lower = 0, upper = 1>[N_I] guess;
+  real mu_diff;
+}
+
+model {
+  real p_ij; //probability of correctly responding to an item
+  real eta;
+  
+  for (j in 1:N) {
+    for(i in 1:N_I) {
+      
+      eta = inv_logit(disc[i]*(theta[j] - diff[i]));
+      p_ij = guess[i] + (1 - guess[i])*eta;
+      
+      Y[j,i] ~ bernoulli(p_ij); 
+    }
+  }
+  //Priors
+  mu_diff ~ normal(0,2);
+  theta ~ std_normal();
+  diff ~ normal(mu_diff,5);
+  disc ~ normal(0,sigma_disc);
+  sigma_disc ~ cauchy(0,2); 
+  guess ~ beta(5,23); 
+}
+
+
+
+```
+
+```{r}
+options(mc.cores = parallel::detectCores()-1)
+rstan_options(auto_write = TRUE)
+```
+
+Posterior Sampling
+```{r, message=FALSE}
+
+stan_3pl <- rstan::sampling(IRT_3PL, chains = 3, data = list(N = nrow(LSAT), N_I = ncol(LSAT), Y = LSAT))
+```
+
+Posterior Estimates
+```{r}
+print(stan_3pl, pars = c("disc", "diff", "guess"))
+```
+
+
+```{r}
+model_3pl <- ltm::tpm(data = LSAT, type = "latent.trait", IRT.param = TRUE)
+model_3pl
+```
+
+Using `brms` for 3
+```{r}
+library(brms)
+
+formula_3pl <- brms::bf(
+response2 ~ gamma + (1 - gamma) * inv_logit(beta + exp(logalpha) * theta),
+nl = TRUE,
+theta ~ 0 + (1 | person),
+beta ~ 1 + (1 |i| item),
+logalpha ~ 1 + (1 |i| item),
+logitgamma ~ 1 + (1 |i| item),
+nlf(gamma ~ inv_logit(logitgamma)),
+family = brmsfamily("bernoulli", link = "identity"))
+```
+
+Converting LSAT data from wide to long in order to use `brms`
+```{r}
+ID <- 1:nrow(LSAT)
+LSAT1 <- data.frame(LSAT, ID)
+LSAT_long <- reshape(LSAT1, varying = c("Item.1", "Item.2", "Item.3", "Item.4", "Item.5"), 
+                     idvar = "ID",direction = "long")
+LSAT_long <- reshape(LSAT1, varying = c("Item.1", "Item.2", "Item.3", "Item.4", "Item.5"), 
+                     idvar = "ID",direction = "long")
+colnames(LSAT_long) <- c("person", "item", "response2")
+```
+
+
+```{r, cache=TRUE}
+brm_3pl <- brms::brm(formula = formula_3pl, data = LSAT_long, chains = 3)
+```
+

@@ -3,6 +3,7 @@ title: "Bayesian IRT"
 author: "Reginald Ziedzor"
 date: "4/29/2020"
 output: rmarkdown::github_document
+
 ---
 
 ```{r setup, include=FALSE}
@@ -21,12 +22,6 @@ We can look at the first few observations of the LSAT dataset
 ```{r}
 head(LSAT)
 ```
-Remember, the item charateristic curve (ICC) formula for the 1PL model is 
-$P(U_{i} = 1|\theta) = \frac{\exp(a_(\theta - b_{i}))}{1 + \exp(a(\theta - b_{i}))}$,
-where $\theta$ is the ability level, $a$ is the item discrimination parameter, which is assumed to be the same for all items in a 1PL model. Also, $b$ is the item difficulty parameter for item $i$, and $P(U_{i} = 1|\theta)$ is the probability that a randomly chosen examinee with ability $\theta$ answers item $i$ correctly. 
-
-$P(U_{i} = 1|\theta)$ will simply be represented by $p$. The 1PL model can be reformulated as 
-$\log(\frac{p}{1-p}) = a(\theta - b_{i}).$
 
 ## Running Stan Code
 
@@ -75,7 +70,7 @@ model {
 ```
 
 Posterior Sampling
-```{r, results='hide', message=FALSE}
+```{r, results='hide', message=FALSE, cache=TRUE}
 
 mod <- rstan::sampling(IRT_1PL, chains = 3, data = list(N = nrow(LSAT), N_I = ncol(LSAT), Y = LSAT))
 ```

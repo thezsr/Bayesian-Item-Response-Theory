@@ -26,19 +26,6 @@ head(LSAT)
     ## 5      0      0      0      0      1
     ## 6      0      0      0      0      1
 
-Remember, the item charateristic curve (ICC) formula for the 1PL model
-is
-\(P(U_{i} = 1|\theta) = \frac{\exp(a_(\theta - b_{i}))}{1 + \exp(a(\theta - b_{i}))}\),
-where \(\theta\) is the ability level, \(a\) is the item discrimination
-parameter, which is assumed to be the same for all items in a 1PL model.
-Also, \(b\) is the item difficulty parameter for item \(i\), and
-\(P(U_{i} = 1|\theta)\) is the probability that a randomly chosen
-examinee with ability \(\theta\) answers item \(i\) correctly.
-
-\(P(U_{i} = 1|\theta)\) will simply be represented by \(p\). The 1PL
-model can be reformulated as
-\(\log(\frac{p}{1-p}) = a(\theta - b_{i}).\)
-
 ## Running Stan Code
 
 ``` r
@@ -126,7 +113,7 @@ print(mod, pars = c("disc", "diff"))
     ## diff[4] -1.81    0.01 0.19 -2.22 -1.92 -1.79 -1.67 -1.48   666    1
     ## diff[5] -2.90    0.01 0.29 -3.55 -3.07 -2.86 -2.71 -2.42   571    1
     ## 
-    ## Samples were drawn using NUTS(diag_e) at Sat May 02 20:37:34 2020.
+    ## Samples were drawn using NUTS(diag_e) at Sat May 02 20:59:48 2020.
     ## For each parameter, n_eff is a crude measure of effective sample size,
     ## and Rhat is the potential scale reduction factor on split chains (at 
     ## convergence, Rhat=1).

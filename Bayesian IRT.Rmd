@@ -81,7 +81,7 @@ print(mod, pars = c("disc", "diff"))
 ```
 
 ## Diagnostic Plots 
-```{r}
+```{r, fig-margin, fig.margin=TRUE}
 rstan::traceplot(mod, pars = c("disc", "diff"))
 rstan::stan_dens(mod, pars = c("disc", "diff"))
 

@@ -124,13 +124,13 @@ print(mod, pars = c("disc", "diff"))
 rstan::traceplot(mod, pars = c("disc", "diff"))
 ```
 
-![](Bayesian-IRT_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+![](Bayesian-IRT_files/figure-gfm/fig-margin-1.png)<!-- -->
 
 ``` r
 rstan::stan_dens(mod, pars = c("disc", "diff"))
 ```
 
-![](Bayesian-IRT_files/figure-gfm/unnamed-chunk-7-2.png)<!-- -->
+![](Bayesian-IRT_files/figure-gfm/fig-margin-2.png)<!-- -->
 
 ## Frequentist Parameter Estimation
 

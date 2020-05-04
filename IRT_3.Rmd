@@ -75,13 +75,13 @@ print(stan_3pl, pars = c("disc", "diff", "guess"))
 ```
 
 
-```{r}
+```{r, eval=FALSE, include=FALSE}
 model_3pl <- ltm::tpm(data = LSAT, type = "latent.trait", IRT.param = TRUE)
 model_3pl
 ```
 
-Using `brms` for 3
-```{r}
+
+```{r, eval=FALSE, include=FALSE}
 library(brms)
 
 formula_3pl <- brms::bf(
@@ -95,8 +95,8 @@ nlf(gamma ~ inv_logit(logitgamma)),
 family = brmsfamily("bernoulli", link = "identity"))
 ```
 
-Converting LSAT data from wide to long in order to use `brms`
-```{r}
+
+```{r, eval=FALSE, include=FALSE}
 ID <- 1:nrow(LSAT)
 LSAT1 <- data.frame(LSAT, ID)
 LSAT_long <- reshape(LSAT1, varying = c("Item.1", "Item.2", "Item.3", "Item.4", "Item.5"), 
@@ -107,7 +107,7 @@ colnames(LSAT_long) <- c("person", "item", "response2")
 ```
 
 
-```{r, cache=TRUE}
+```{r, eval=FALSE, include=FALSE}
 brm_3pl <- brms::brm(formula = formula_3pl, data = LSAT_long, chains = 3)
 ```
 

@@ -118,6 +118,22 @@ print(mod, pars = c("disc", "diff"))
     ## and Rhat is the potential scale reduction factor on split chains (at 
     ## convergence, Rhat=1).
 
+## Diagnostic Plots
+
+``` r
+rstan::traceplot(mod, pars = c("disc", "diff"))
+```
+
+![](Bayesian-IRT_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+
+``` r
+rstan::stan_dens(mod, pars = c("disc", "diff"))
+```
+
+![](Bayesian-IRT_files/figure-gfm/unnamed-chunk-7-2.png)<!-- -->
+
+## Frequentist Parameter Estimation
+
 Using the `ltm` package to obtain maximum likelihood estimates
 
 ``` r
